@@ -1,5 +1,16 @@
 # **Laboratorio 5: Variabilidad de la Frecuencia Cardíaca HRV y balance autonómico**
 
+## Integrantes
+* Laura Valentina Velásquez Castiblanco (5600846)
+* Carol Valentina Cruz Becerra (5600845)
+* Carlos Felipe Moreno Guzmán (5600881)
+
+## Objetivos:
+* Identificar cambios en el balance autonómico mediante análisis temporal de la variabilidad de la frecuencia cardíaca (HRV).
+* Detectar los picos R y calcular los diferentes intervalos R-R.
+* Comparar el comportamiento de una señal emulada y una señal real en términos de frecuencia media y mediana.
+* Emplear herramientas computacionales para el procesamiento, segmentación y análisis de señales biomédicas.
+
 # **Parte A**
 
 ## a. Fundamento Teórico
