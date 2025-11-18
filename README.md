@@ -8,6 +8,17 @@
 ## Objetivos:
 * Identificar cambios en el balance autonómico mediante análisis temporal de la variabilidad de la frecuencia cardíaca (HRV).
 * Detectar los picos R y calcular los diferentes intervalos R-R.
+* Realizar el diagrama de Poincare para la señal ECG.
+
+## Diagramas de flujo
+
+> ### Parte A: Preparación del Paciente y Entorno 
+
+<p align="center">
+<img width="581" height="1000" alt="image" src="https://github.com/user-attachments/assets/f670291b-e851-4386-a4d7-662e86498336" />
+</p>
+
+> ### Parte B
 
 # **Parte A**
 
