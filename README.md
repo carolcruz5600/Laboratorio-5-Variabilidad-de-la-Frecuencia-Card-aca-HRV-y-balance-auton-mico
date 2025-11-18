@@ -20,6 +20,8 @@
 
 > ### Parte B
 
+> ### Parte C
+
 # **Parte A**
 
 ## a. Fundamento Teórico
@@ -51,4 +53,12 @@ La **actividad simpática aumenta la frecuencia cardíaca**. El SNS libera norad
 
 La **actividad parasimpática disminuye la frecuencia cardíaca**. El SNP libera acetilcolina sobre receptores muscarínicos en el nodo SA, reduciendo la pendiente de la despolarización e hiperpolarizando la membrana para así retardar la coducción en el nodo AV. De esta manera, el corazón late más lento y con menor excitabilidad, permitiendo que el organismo descanse y conserve la mayor cantidad de energía posible.
 
+# **Parte B**
 
+> ### Cálculo manual de Filtro LP IIR
+
+<p align="center">
+<img width="769" height="1000" alt="image" src="https://github.com/user-attachments/assets/6423881f-adea-4be6-a9ec-c904c2600804" />
+</p>
+
+# **Parte C**
