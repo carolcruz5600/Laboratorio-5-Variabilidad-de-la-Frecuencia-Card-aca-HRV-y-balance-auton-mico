@@ -138,36 +138,41 @@ Posteriormente, se diseñaron e implementaron dos filtros digitales IIR: un filt
 
 >### Parámetros
 
-Se especifican los valores iniciales del diseño: frecuencias 𝑓1 y 𝑓2, correspondientes a los límites de la banda de rechazo y banda de transición, así como las atenuaciones 𝑘1 y 𝑘2 que servirán para calcular el orden del filtro.
+En esta primera etapa se establecen los parámetros principales del filtro IIR pasa-altos. Se definen las frecuencias límite ``f₁ = 0.5 Hz`` y ``f₂ = 2 Hz``, que corresponden al inicio de la banda de rechazo y de la banda de transición, respectivamente. También se especifican las atenuaciones requeridas para cada banda, siendo ``k₁ = −10 dB`` en la banda de rechazo y ``k₂ = −3 dB`` en la banda de transición. 
+
+Estos valores constituyen la base sobre la cual se calculará el orden del filtro y su comportamiento deseado en frecuencia.
 
 <img width="885" height="660" alt="image" src="https://github.com/user-attachments/assets/8ffc071e-ce9f-49ea-b28f-c10796bc3f6d" />
 
 >### Pasar a Requisitos Digitales
 
-Se convierten las frecuencias analógicas a frecuencias digitales normalizadas dividiéndolas por la frecuencia de muestreo (5000 Hz). Esto produce los valores 𝜔1 y 𝜔2 necesarios para continuar con el diseño en el dominio digital.
+Luego se trasladan las frecuencias analógicas al dominio digital mediante la normalización con la frecuencia de muestreo, que en este caso es de ``5000 muestras por segundo``. A partir de esta conversión se obtienen las frecuencias digitales equivalentes ``ω₁ = 6.28×10⁻⁴ rad/muestra`` y ``ω₂ = 25.14×10⁻⁴ rad/muestra``. 
+
+Estos valores permiten definir con precisión las bandas del filtro dentro del dominio discreto en el cual será implementado.
+
 
 <img width="513" height="196" alt="image" src="https://github.com/user-attachments/assets/7394a8d7-46f5-4307-94db-dd68c7fe420d" />
 
 >### T1 y Pre-Warping
 
-Se aplica el pre-warping utilizando la función tangente para compensar la distorsión introducida por la transformación bilineal. Así se obtienen las frecuencias analógicas corregidas Ω1 y Ω2, que serán utilizadas para definir el filtro analógico base.
+Debido a la distorsión que introduce la transformación bilineal, se aplica el proceso de pre-warping con la expresión ``Ω = 2·tan(ω/2)``. Este procedimiento permite corregir las frecuencias digitales anteriores y obtener las versiones ajustadas ``Ω₁ = 6.28×10⁻⁴`` y ``Ω₂ = 25.14×10⁻⁴``. Estas frecuencias corregidas garantizan que, una vez realizada la transformación al dominio Z, el filtro digital mantenga las características especificadas en el diseño analógico original.
 
 <img width="535" height="129" alt="image" src="https://github.com/user-attachments/assets/92541e15-077c-46ec-9700-7b8ad359dc20" />
 
 >### Filtro Análogo
 
-Se calculan las frecuencias de borde normalizadas para el filtro prototipo (Ω𝑟 y Ω𝑝) y se determina el orden del filtro a partir de los requisitos de atenuación, resultando un filtro de primer orden. Luego se obtiene la función de transferencia analógica pasa-altos correspondiente.
+Con las frecuencias corregidas se determinan los valores normalizados ``Ωᵣ = 4 rad/s`` y ``Ωₚ = 1 rad/s``, que representan las fronteras de la banda de rechazo y la banda de paso en el diseño analógico. A partir de estos valores y de las atenuaciones definidas, se calcula que el filtro requerido es de primer orden. Posteriormente se obtiene la función de transferencia analógica correspondiente, la cual adopta la forma pasa-altos y constituye la base previa a la digitalización completa del filtro.
 
 <img width="608" height="541" alt="image" src="https://github.com/user-attachments/assets/388bd74f-12ee-466f-ae74-422ae8540a46" />
 
 >### Transformación Bilineal
-Se reemplaza la variable 𝑠 por su equivalente bilineal, obteniendo la función de transferencia en el dominio Z. Se simplifica la expresión hasta obtener una forma que permita identificar los coeficientes del filtro digital.
+Para llevar el filtro al dominio Z se reemplaza la variable analógica **s** por su forma bilineal equivalente: ``s = 2·(1 − z⁻¹) / (1 + z⁻¹)``. Tras esta sustitución y la correspondiente simplificación algebraica, se obtiene una expresión discreta de la función de transferencia. En este desarrollo aparecen coeficientes numéricos relevantes como ``2.002514`` y ``1.997486``, así como términos dependientes de ``z⁻¹``, que permiten identificar y extraer directamente los coeficientes finales del filtro digital.
 
 <img width="798" height="327" alt="image" src="https://github.com/user-attachments/assets/527594f8-28be-4c12-9bd5-2978e902c54e" />
 
 >### Ecuación en Diferencias
 
-A partir de la función de transferencia en Z se deriva la ecuación en diferencias que implementa el filtro. Esta ecuación relaciona la salida actual con la entrada actual, la entrada anterior y la salida anterior, finalizando así el diseño del filtro digital.
+Finalmente, a partir de la función ``H(z)`` obtenida, se despeja la ecuación en diferencias que define cómo el filtro procesa cada muestra. La ecuación resultante es: ``y(n) = 0.998744·x(n) − 0.998744·x(n−1) + 0.997489·y(n−1)``. Los coeficientes ``0.998744`` y ``0.997489`` representan los valores exactos obtenidos en el cálculo del filtro. Esta relación recursiva describe cómo la salida actual depende tanto de las entradas actual y pasada como de la salida previa, finalizando así la implementación digital del filtro pasa-altos.
 
 <img width="651" height="335" alt="image" src="https://github.com/user-attachments/assets/8a510ad4-f0c3-489e-b5e8-fb66751ddfc6" />
 
