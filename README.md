@@ -149,7 +149,7 @@ plt.xlim(5000, 15000)
 plt.show()
 ```
 
-<img width="1001" height="547" alt="image" src="https://github.com/user-attachments/assets/1e9eeb0b-4596-4a89-b3d0-7f7230b64c8f" />
+<img width="70%" height="547" alt="image" src="https://github.com/user-attachments/assets/1e9eeb0b-4596-4a89-b3d0-7f7230b64c8f" />
 
 # **Parte B**
 ## c. Pre-procesamiento de la señal
@@ -328,7 +328,7 @@ plt.xlim(5000, 15000)
 plt.show()
 ```
 
-<img width="1012" height="547" alt="image" src="https://github.com/user-attachments/assets/f4c0658d-7e6b-4a26-a68f-d3a300190068" />
+<img width="70%" height="547" alt="image" src="https://github.com/user-attachments/assets/f4c0658d-7e6b-4a26-a68f-d3a300190068" />
 
 # **Parte C**
 
