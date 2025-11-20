@@ -126,11 +126,131 @@ El _**Balance Autonómico**_ es el equilibrio dinámico entre el sistema simpát
 Esta cuantificación permite identificar un balance adecuado, o un desbalance entre los dos sistemas. Lo anterior facilita la identificación de patrones relacionados con el manejo del estrés, salud cardiovascular y recuperación fisiológica (entre otros) en los pacientes, ofreciendo marcadores de gran utilidad para el personal médico.
 
 # **Parte B**
+## c. Pre-procesamiento de la señal
 
-> ### Cálculo manual de Filtro LP IIR
+Para garantizar una correcta interpretación de la señal electrocardiográfica (ECG), es necesario eliminar el ruido producido por el movimiento, la respiración y la deriva de la línea base. En este laboratorio se adquirió la señal ECG de un sujeto durante cuatro minutos: dos en reposo y dos leyendo en voz alta, verificando previamente que la frecuencia de muestreo y la cuantificación fueran adecuadas.
 
-<p align="center">
-<img width="769" height="1000" alt="image" src="https://github.com/user-attachments/assets/6423881f-adea-4be6-a9ec-c904c2600804" />
-</p>
+Posteriormente, se diseñaron e implementaron dos filtros digitales IIR: un filtro pasa-alto para corregir la deriva de baja frecuencia y un filtro pasa-banda para resaltar el contenido espectral propio del ECG. Finalmente, se obtuvo la ecuación en diferencias de cada filtro y se aplicaron a la señal asumiendo condiciones iniciales en cero.
+
+### 1. Filtro HP IIR 
+>### 1.1. Diseño del Filtro
+
+>### Parámetros
+Se especifican los valores iniciales del diseño: frecuencias 𝑓1 y 𝑓2, correspondientes a los límites de la banda de rechazo y banda de transición, así como las atenuaciones 𝑘1 y 𝑘2 que servirán para calcular el orden del filtro.
+<img width="885" height="660" alt="image" src="https://github.com/user-attachments/assets/8ffc071e-ce9f-49ea-b28f-c10796bc3f6d" />
+
+>### Pasar a Requisitos Digitales
+Se convierten las frecuencias analógicas a frecuencias digitales normalizadas dividiéndolas por la frecuencia de muestreo (5000 Hz). Esto produce los valores 𝜔1 y 𝜔2 necesarios para continuar con el diseño en el dominio digital.
+<img width="513" height="196" alt="image" src="https://github.com/user-attachments/assets/7394a8d7-46f5-4307-94db-dd68c7fe420d" />
+
+>### T1 y Pre-Warping
+Se aplica el pre-warping utilizando la función tangente para compensar la distorsión introducida por la transformación bilineal. Así se obtienen las frecuencias analógicas corregidas Ω1 y Ω2, que serán utilizadas para definir el filtro analógico base.
+<img width="535" height="129" alt="image" src="https://github.com/user-attachments/assets/92541e15-077c-46ec-9700-7b8ad359dc20" />
+
+>### Filtro Análogo
+Se calculan las frecuencias de borde normalizadas para el filtro prototipo (Ω𝑟 y Ω𝑝) y se determina el orden del filtro a partir de los requisitos de atenuación, resultando un filtro de primer orden. Luego se obtiene la función de transferencia analógica pasa-altos correspondiente.
+<img width="608" height="541" alt="image" src="https://github.com/user-attachments/assets/388bd74f-12ee-466f-ae74-422ae8540a46" />
+
+>### Transformación Bilineal
+Se reemplaza la variable 𝑠 por su equivalente bilineal, obteniendo la función de transferencia en el dominio Z. Se simplifica la expresión hasta obtener una forma que permita identificar los coeficientes del filtro digital.
+<img width="798" height="327" alt="image" src="https://github.com/user-attachments/assets/527594f8-28be-4c12-9bd5-2978e902c54e" />
+
+>### Ecuación en Diferencias
+A partir de la función de transferencia en Z se deriva la ecuación en diferencias que implementa el filtro. Esta ecuación relaciona la salida actual con la entrada actual, la entrada anterior y la salida anterior, finalizando así el diseño del filtro digital.
+<img width="651" height="335" alt="image" src="https://github.com/user-attachments/assets/8a510ad4-f0c3-489e-b5e8-fb66751ddfc6" />
+
+>### 1.2. Implementación en Python
+La función ``IIR_HP(x)`` implementa en código el filtro IIR pasa-altos que se obtuvo previamente mediante el diseño analítico. Para ello, comienza creando un vector de salida del mismo tamaño que la señal de entrada y definiendo los coeficientes del filtro, los cuales corresponden directamente a la ecuación en diferencias derivada de la función de transferencia digital. Además, inicializa dos memorias (``x1`` y ``y1``) que almacenan la entrada y la salida anteriores, necesarias debido al carácter recursivo del filtro IIR. Luego, en cada iteración del bucle recorre la señal muestra por muestra, calculando la salida actual como combinación lineal de la entrada presente, la entrada pasada y la salida previa. Después de cada cálculo actualiza las memorias para la siguiente iteración, permitiendo así mantener la continuidad del proceso recursivo. Al finalizar, la función devuelve el vector ``y``, que contiene la señal filtrada según las características del filtro pasa-altos diseñado.
+
+```python
+# Pasa-Altos
+def IIR_HP(x):
+
+    y = np.zeros_like(x)
+
+    # Coeficientes del filtro
+    b0 = 0.998744
+    b1 = -0.998744
+    a1 = 0.997489
+
+    # Memorias
+    x1 = 0
+    y1 = 0
+
+    for n in range(len(x)):
+        y[n] = b0*x[n] + b1*x1 + a1*y1
+
+        # Actualizar memorias
+        x1 = x[n]
+        y1 = y[n]
+
+    return y
+```
+### 2. Filtro LP IIR 
+>### 2.1. Diseño del Filtro
+>### Parámetros - Pasar a Requisitos Digitales
+En esta sección se definen los parámetros iniciales para el diseño del filtro FIR pasa-bajos, incluyendo los valores de 𝑘1=−3 dB y 𝑘2=−18 dB, así como las frecuencias de corte relacionadas con los índices 128 y 208. Estos parámetros sirven como base para calcular las frecuencias normalizadas y los requerimientos del filtro.
+Posteriormente, se convierten las frecuencias analógicas a digitales dividiéndolas por la frecuencia de muestreo (5000 muestras/s). Esto da como resultado valores como 𝑊1=0.151rad/muestra y 𝑊2=0.251rad/muestra, que representan los límites de la banda de paso y de transición del filtro.
+<img width="689" height="288" alt="image" src="https://github.com/user-attachments/assets/51fa572f-c955-4fcd-a14f-57ba9dcde36b" />
+
+>### T1 y Pre-Warping
+Se aplica la corrección por pre-warp usando la fórmula Ω=2tan(𝜔/2). A partir de los valores digitalizados, se obtienen frecuencias corregidas como Ω1=0.15 y Ω2=0.252	​, que compensan la distorsión generada por la transformación bilineal.
+<img width="364" height="177" alt="image" src="https://github.com/user-attachments/assets/efe55343-760b-4a2c-bec5-673ec3d51dad" />
+
+>### Filtro Análogo
+Con las frecuencias corregidas se calcula el orden del filtro usando la expresión logarítmica, obteniéndose 𝑛=2. Luego se determina la función de transferencia analógica.
+<img width="793" height="634" alt="image" src="https://github.com/user-attachments/assets/a7f67030-b79e-43b5-b664-0b8c04589ce8" />
+
+>### Transformación Bilineal
+En esta etapa se sustituye la variable s por su equivalente bilineal, definido como: s = 2(1 − z⁻¹) / (1 + z⁻¹). Esta transformación permite obtener la función de transferencia en el dominio Z. Durante el proceso aparecen coeficientes característicos del filtro digital, tales como 3.44×10⁻³, 1.032×10⁻² y 3.94×10⁻³, los cuales conforman los parámetros finales del filtro implementado.
+
+<img width="1648" height="785" alt="image" src="https://github.com/user-attachments/assets/bafea7d0-4eb4-4958-a4c4-a3a204219492" />
+
+>### Ecuación en Diferencias
+Finalmente, a partir de la función H(z) se despeja la ecuación en diferencias que implementa el filtro. En esta expresión aparecen coeficientes característicos como 3.304, -7.118, 4.718 y -0.876, que multiplican las salidas anteriores ``y(n−1)``, ``y(n−2)`` y ``y(n−3)``. También se identifican los coeficientes asociados a las entradas: 3.44×10⁻³, 1.032×10⁻² y nuevamente 3.44×10⁻³. Esta ecuación describe cómo se obtiene cada nueva muestra del filtro FIR/LB a partir de combinaciones lineales de entradas y salidas previas.
+
+<img width="1780" height="415" alt="image" src="https://github.com/user-attachments/assets/2518aa97-3490-493a-b6b2-062859ef7d6e" />
+
+>### 2.2. Implementación en Python
+La función ``IIR_LP(x)`` implementa un filtro IIR pasa-bajos de tercer orden utilizando la ecuación en diferencias obtenida en el diseño del filtro. Para ello, se inicializa un vector de salida del mismo tamaño que la señal de entrada y se definen los coeficientes del filtro: los coeficientes ``b0``, ``b1``, ``b2`` y ``b3`` asociados a las entradas actual y pasadas, y los coeficientes ``a1``, ``a2`` y ``a3`` correspondientes a las salidas previas. Además, se crean memorias para almacenar las últimas tres entradas ``(x1, x2, x3)`` y las últimas tres salidas ``(y1, y2, y3)``, necesarias para la implementación recursiva del filtro. En cada iteración del bucle, la salida actual ``y[n]`` se calcula como una combinación lineal de las entradas presentes y anteriores junto con las salidas pasadas, aplicando directamente la ecuación en diferencias del filtro. Tras cada cálculo, las memorias se actualizan desplazando las muestras previas para su uso en la siguiente iteración. Finalmente, la función devuelve el vector y, que representa la señal procesada por el filtro pasa-bajos.
+
+```python
+# Pasa-Bajo
+def IIR_LP(x):
+
+    y = np.zeros_like(x)
+
+    # Coeficientes x
+    b0 = 1.04e-3
+    b1 = 3.12e-3
+    b2 = 3.12e-3
+    b3 = 1.04e-3
+
+    # Coeficientes y
+    a1 = 2.154
+    a2 = -1.425
+    a3 = 0.2654
+
+    # Memorias (entradas y salidas pasadas)
+    x1 = 0;  x2 = 0;  x3 = 0
+    y1 = 0;  y2 = 0;  y3 = 0
+
+    for n in range(len(x)):
+        y[n] = (b0*x[n] + b1*x1 + b2*x2 + b3*x3
+                + a1*y1 + a2*y2 + a3*y3)
+
+        # Actualizar memorias de entrada
+        x3 = x2
+        x2 = x1
+        x1 = x[n]
+
+        # Actualizar memorias de salida
+        y3 = y2
+        y2 = y1
+        y1 = y[n]
+
+    return y
+```
+
 
 # **Parte C**
