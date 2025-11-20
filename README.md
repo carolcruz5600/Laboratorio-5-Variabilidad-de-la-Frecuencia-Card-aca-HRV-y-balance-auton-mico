@@ -331,3 +331,5 @@ plt.show()
 <img width="1012" height="547" alt="image" src="https://github.com/user-attachments/assets/f4c0658d-7e6b-4a26-a68f-d3a300190068" />
 
 # **Parte C**
+
+# **Conclusiones**
