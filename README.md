@@ -282,4 +282,23 @@ def IIR_LP(x):
     return y
 ```
 
+### 3. Aplicación de los Filtros
+
+El fragmento de código aplica dos filtros IIR en cascada a una señal ECG y posteriormente grafica el resultado filtrado. Primero, la señal original ``signal`` pasa por el filtro pasa-altos ``IIR_HP``, cuyo objetivo suele ser eliminar componentes de muy baja frecuencia, como el desplazamiento de línea base. Luego, la salida obtenida se procesa con el filtro pasa-bajos ``IIR_LP``, encargado de atenuar el ruido de alta frecuencia presente en el ECG.
+
+Después del filtrado, se genera una grafica de la señal resultante. Se añaden título, etiquetas de los ejes y una cuadrícula para facilitar la visualización. Finalmente, se define un rango específico del eje horizontal ``(xlim(5000, 15000))`` para observar un segmento concreto de la señal filtrada. El comando ``plt.show()`` muestra la gráfica completa en pantalla.
+
+```python
+signal_filtrada = IIR_HP(signal)
+signal_filtrada = IIR_LP(signal_filtrada)
+
+plt.figure(figsize=(12, 6))
+plt.plot(signal_filtrada)
+plt.title('Señal ECG Filtrada')
+plt.xlabel('Muestras (n)')
+plt.ylabel('Amplitud (V)')
+plt.grid(True)
+plt.xlim(5000, 15000)
+plt.show()
+```
 # **Parte C**
