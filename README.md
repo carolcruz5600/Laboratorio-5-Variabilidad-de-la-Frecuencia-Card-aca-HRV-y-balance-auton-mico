@@ -125,6 +125,32 @@ El _**Balance Autonómico**_ es el equilibrio dinámico entre el sistema simpát
 
 Esta cuantificación permite identificar un balance adecuado, o un desbalance entre los dos sistemas. Lo anterior facilita la identificación de patrones relacionados con el manejo del estrés, salud cardiovascular y recuperación fisiológica (entre otros) en los pacientes, ofreciendo marcadores de gran utilidad para el personal médico.
 
+## b. Adquisición de la señal ECG
+
+Se seleccionó un sujeto de prueba para la adquisición de la señal electrocardiográfica. Se registró la actividad del ECG durante un total de 4 minutos: durante los primeros 2 minutos, el participante permaneció inmóvil y en completo silencio, mientras que en los últimos 2 minutos leyó en voz alta un fragmento de texto previamente elegido por el equipo. Además, se verificó que la frecuencia de muestreo y los niveles de cuantificación configurados fueran adecuados para garantizar la correcta captura y el análisis de la señal.
+
+En este bloque se define la ruta del archivo que contiene la señal ECG almacenada en formato de texto. La variable ``file_path`` guarda la ubicación del archivo dentro de Google Drive. Luego, la función ``np.loadtxt()`` lee el archivo y carga los datos numéricos en la variable ``signal``, quedando disponibles como un arreglo de ``NumPy`` para su posterior procesamiento.
+
+```python
+file_path = '/content/drive/MyDrive/Colab Notebooks/Lab Procesamiento Digital de Señales/PDS - Lab 5/ECGLab5_5000.txt' # Ejemplo: Cambia esto por la ruta de tu archivo
+signal = np.loadtxt(file_path)
+```
+
+Este fragmento crea la gráfica de la señal ECG cargada previamente. Se genera un gráfico de la señal completa usando ``plt.plot(signal)``. Después se añade un título descriptivo y etiquetas para los ejes, indicando que el eje horizontal representa el número de muestras y el vertical la amplitud medida en voltios. También se activa una cuadrícula para facilitar la lectura de la gráfica. La instrucción ``plt.xlim(5000, 15000)`` limita el eje horizontal para visualizar un segmento específico de la señal (entre las muestras 5000 y 15000). Finalmente, ``plt.show()`` muestra la figura en pantalla.
+
+```python
+plt.figure(figsize=(12, 6))
+plt.plot(signal)
+plt.title('Señal ECG - 4 minutos')
+plt.xlabel('Muestras (n)')
+plt.ylabel('Amplitud (V)')
+plt.grid(True)
+plt.xlim(5000, 15000)
+plt.show()
+```
+
+<img width="1001" height="547" alt="image" src="https://github.com/user-attachments/assets/1e9eeb0b-4596-4a89-b3d0-7f7230b64c8f" />
+
 # **Parte B**
 ## c. Pre-procesamiento de la señal
 
@@ -301,4 +327,7 @@ plt.grid(True)
 plt.xlim(5000, 15000)
 plt.show()
 ```
+
+<img width="1012" height="547" alt="image" src="https://github.com/user-attachments/assets/f4c0658d-7e6b-4a26-a68f-d3a300190068" />
+
 # **Parte C**
