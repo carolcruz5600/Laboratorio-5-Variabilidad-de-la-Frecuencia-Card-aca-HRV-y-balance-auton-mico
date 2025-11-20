@@ -132,7 +132,7 @@ Se seleccionó un sujeto de prueba para la adquisición de la señal electrocard
 En este bloque se define la ruta del archivo que contiene la señal ECG almacenada en formato de texto. La variable ``file_path`` guarda la ubicación del archivo dentro de Google Drive. Luego, la función ``np.loadtxt()`` lee el archivo y carga los datos numéricos en la variable ``signal``, quedando disponibles como un arreglo de ``NumPy`` para su posterior procesamiento.
 
 ```python
-file_path = '/content/drive/MyDrive/Colab Notebooks/Lab Procesamiento Digital de Señales/PDS - Lab 5/ECGLab5_5000.txt' # Ejemplo: Cambia esto por la ruta de tu archivo
+file_path = '/content/drive/MyDrive/Colab Notebooks/Lab Procesamiento Digital de Señales/PDS - Lab 5/ECGLab5_5000.txt'
 signal = np.loadtxt(file_path)
 ```
 
