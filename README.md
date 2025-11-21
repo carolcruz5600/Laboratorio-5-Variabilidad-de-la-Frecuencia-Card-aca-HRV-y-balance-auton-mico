@@ -20,7 +20,15 @@
 
 > ### Parte B
 
+<p align="center">
+<img width="581" height="1470" alt="image" src="https://github.com/user-attachments/assets/b80f84c4-1d34-4250-bc73-abc9400fb864" />
+</p>
+
 > ### Parte C
+
+<p align="center">
+<img width="581" height="897" alt="image" src="https://github.com/user-attachments/assets/00c6d5d7-1e78-46f2-9d50-fa735171b7ea" />
+</p>
 
 ## Configuración inicial
 
